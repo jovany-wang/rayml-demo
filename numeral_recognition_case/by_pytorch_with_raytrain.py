@@ -127,7 +127,7 @@ def train_func(config):
     # train_iters = range(len(train_accs))
     # _draw_train_process('training',train_iters,train_loss,train_accs,'training loss','training acc')
     print('Finished Training')
-    return net
+    return net.module
 
 
 def _prepare_data_and_train():
