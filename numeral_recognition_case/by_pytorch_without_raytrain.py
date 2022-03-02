@@ -7,6 +7,7 @@ logger.basicConfig()
 logger.root.setLevel(logger.INFO)
 logger.basicConfig(level=logger.INFO)
 
+import time
 
 import torch 
 from torch import nn
@@ -80,7 +81,7 @@ def _train_my_model(net, train_loader, optimizer, criterion):
     test_accs = []
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net = net.to(device)
-    for epoch in range(5):
+    for epoch in range(4):
         running_loss = 0.0
         for i,data in enumerate(train_loader, 0):#0是下标起始位置默认为0
             # data 的格式[[inputs, labels]]       
@@ -116,6 +117,7 @@ def _train_my_model(net, train_loader, optimizer, criterion):
 
 
 def _prepare_data_and_train():
+    start_time = time.time()
     # 1. Pprepare data.
     train_loader = _prepare_train_data()
     # 2. Define a CNN model.
@@ -129,6 +131,9 @@ def _prepare_data_and_train():
     
     # 5. Train my CNN model.
     trained_net = _train_my_model(cnn_net, train_loader, sgd_optimizer, criterion)
+    end_time = time.time()
+    print("========It took ", end_time - start_time)
+
     path_to_save = "/tmp//raytrain_demo/trainedmodel"
     torch.save(trained_net.state_dict(), path_to_save)
 

@@ -1,5 +1,6 @@
 
 import numpy as np
+import time
 
 import logging as logger
 
@@ -44,7 +45,7 @@ def _prepare_train_data():
                                 train = True,
                                 download = True)
 
-    train_loader = DataLoader(train_data, batch_size=32)
+    train_loader = DataLoader(train_data, batch_size=16)
     train_loader = train.torch.prepare_data_loader(train_loader)
     return train_loader    
 
@@ -54,7 +55,7 @@ def _prepare_test_data():
     test_data = datasets.MNIST(root="/tmp/raytrain_demo/data/",
                             transform = transform,
                             train = False)
-    test_loader = torch.utils.data.DataLoader(test_data,batch_size=32,
+    test_loader = torch.utils.data.DataLoader(test_data,batch_size=16,
                                             shuffle=True,num_workers=2)
     return test_loader
 
@@ -98,7 +99,7 @@ def train_func(config):
     net = cnn_net
     optimizer = sgd_optimizer
 
-    for epoch in range(5):
+    for epoch in range(4):
         running_loss = 0.0
         for i,data in enumerate(train_loader, 0):
             inputs,labels = data
@@ -131,11 +132,13 @@ def train_func(config):
 
 
 def _prepare_data_and_train():
-    trainer = Trainer(backend="torch", num_workers=2)
+    start_time = time.time()    
+    trainer = Trainer(backend="torch", num_workers=4)
     trainer.start() # set up resources
     trainer.run(train_func)
     trainer.shutdown() # clean up resources
-    print("==============OK")
+    end_time = time.time()
+    print("========It took ", end_time - start_time)
 
     # trained_net = _train_my_model(cnn_net, train_loader, sgd_optimizer, criterion)
     # path_to_save = "/tmp//raytrain_demo/trainedmodel"
