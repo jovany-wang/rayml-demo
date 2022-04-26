@@ -82,6 +82,8 @@ def main(num_rounds: int):
     ray.get(recver.ping.remote())
 
     send_obj = sender.do_send.remote(num_rounds)
+    import time
+    time.sleep(10000)
     recv_obj = recver.do_recv.remote(num_rounds)
 
     print("send_buf:", ray.get(send_obj))
